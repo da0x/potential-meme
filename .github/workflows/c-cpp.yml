@@ -15,6 +15,7 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Set up environment
+      shell: bash
       run: |
         if [ $RUNNER_OS == "Linux" ]; then
           sudo apt-get update
@@ -22,10 +23,6 @@ jobs:
             sudo apt-get install -y g++
           else
             sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
-          fi
-        elif [ $RUNNER_OS == "Windows" ]; then
-          if [ ${{ matrix.architecture }} == "x64" ]; then
-            choco install mingw
           fi
         elif [ $RUNNER_OS == "macOS" ]; then
           if [ ${{ matrix.architecture }} == "x64" ]; then
@@ -37,7 +34,15 @@ jobs:
           fi
         fi
 
+    - name: Set up environment (Windows)
+      if: runner.os == 'Windows'
+      run: |
+        if ($Env:RUNNER_ARCH -eq 'X64') {
+          choco install mingw
+        }
+
     - name: Build
+      shell: bash
       run: |
         if [ $RUNNER_OS == "Linux" ]; then
           if [ ${{ matrix.architecture }} == "x64" ]; then
@@ -45,8 +50,6 @@ jobs:
           else
             aarch64-linux-gnu-g++ -o output main.cpp
           fi
-        elif [ $RUNNER_OS == "Windows" ]; then
-          g++ -o output main.cpp
         elif [ $RUNNER_OS == "macOS" ]; then
           if [ ${{ matrix.architecture }} == "x64" ]; then
             g++ -o output main.cpp
@@ -54,3 +57,7 @@ jobs:
             arm-none-eabi-g++ -o output main.cpp
           fi
         fi
+
+    - name: Build (Windows)
+      if: runner.os == 'Windows'
+      run: g++ -o output main.cpp
