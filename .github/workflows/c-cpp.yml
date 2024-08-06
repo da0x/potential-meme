@@ -17,47 +17,45 @@ jobs:
     - name: Set up environment
       shell: bash
       run: |
-        if [ $RUNNER_OS == "Linux" ]; then
-          sudo apt-get update
-          if [ ${{ matrix.architecture }} == "x64" ]; then
+        case "${{ matrix.os }}-${{ matrix.architecture }}" in
+          "ubuntu-latest-x64")
+            sudo apt-get update
             sudo apt-get install -y g++
-          else
+            ;;
+          "ubuntu-latest-arm64")
+            sudo apt-get update
             sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
-          fi
-        elif [ $RUNNER_OS == "macOS" ]; then
-          if [ ${{ matrix.architecture }} == "x64" ]; then
+            ;;
+          "windows-latest-x64")
+            choco install mingw
+            ;;
+          "macos-latest-x64")
             brew install gcc
-          else
+            ;;
+          "macos-latest-arm64")
             brew install llvm
             brew install arm-none-eabi-gcc
             export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
-          fi
-        fi
-
-    - name: Set up environment (Windows)
-      if: runner.os == 'Windows'
-      run: |
-        if ($Env:RUNNER_ARCH -eq 'X64') {
-          choco install mingw
-        }
+            ;;
+        esac
 
     - name: Build
       shell: bash
       run: |
-        if [ $RUNNER_OS == "Linux" ]; then
-          if [ ${{ matrix.architecture }} == "x64" ]; then
+        case "${{ matrix.os }}-${{ matrix.architecture }}" in
+          "ubuntu-latest-x64")
             g++ -o output main.cpp
-          else
+            ;;
+          "ubuntu-latest-arm64")
             aarch64-linux-gnu-g++ -o output main.cpp
-          fi
-        elif [ $RUNNER_OS == "macOS" ]; then
-          if [ ${{ matrix.architecture }} == "x64" ]; then
+            ;;
+          "windows-latest-x64")
             g++ -o output main.cpp
-          else
+            ;;
+          "macos-latest-x64")
+            g++ -o output main.cpp
+            ;;
+          "macos-latest-arm64")
             arm-none-eabi-g++ -o output main.cpp
-          fi
-        fi
-
-    - name: Build (Windows)
-      if: runner.os == 'Windows'
-      run: g++ -o output main.cpp
+            ;;
+        esac
