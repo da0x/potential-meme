@@ -34,7 +34,7 @@ jobs:
             ;;
           "macos-latest-arm64")
             brew install llvm
-            brew install arm-none-eabi-gcc
+            brew install gcc
             export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
             ;;
         esac
@@ -56,6 +56,6 @@ jobs:
             g++ -o output main.cpp
             ;;
           "macos-latest-arm64")
-            arm-none-eabi-g++ -o output main.cpp
+            g++ -o output main.cpp
             ;;
         esac
