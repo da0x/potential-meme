@@ -29,7 +29,7 @@ jobs:
           if [ ${{ matrix.architecture }} == "x64" ]; then
             brew install gcc
           else
-            brew install arm-linux-gnueabi-binutils
+            brew install arm-linux-gnueabihf-binutils
           fi
         fi
 
@@ -47,6 +47,6 @@ jobs:
           if [ ${{ matrix.architecture }} == "x64" ]; then
             g++ -o output main.cpp
           else
-            arm-linux-gnueabi-g++ -o output main.cpp
+            arm-linux-gnueabihf-g++ -o output main.cpp
           fi
         fi
