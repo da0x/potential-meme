@@ -29,7 +29,9 @@ jobs:
           if [ ${{ matrix.architecture }} == "x64" ]; then
             brew install gcc
           else
+            brew install llvm
             brew install arm-none-eabi-gcc
+            export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
           fi
         fi
 
