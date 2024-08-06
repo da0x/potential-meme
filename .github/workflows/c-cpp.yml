@@ -59,3 +59,10 @@ jobs:
             g++ -o output main.cpp
             ;;
         esac
+
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: potential-meme-${{ matrix.os }}-${{ matrix.architecture }}
+        path: potential-meme
