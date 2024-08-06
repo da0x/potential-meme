@@ -62,7 +62,7 @@ jobs:
 
 
     - name: Upload artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: potential-meme-${{ matrix.os }}-${{ matrix.architecture }}
         path: potential-meme
